@@ -44,10 +44,10 @@ const SignIn = () => {
         variant="contained"
         color="primary"
         onClick={handleSignIn}
-
+        fullWidth
         sx={{ mt: 2 }}
       >
-        Sign In
+        Sign Up
       </Button>
       <a className="signup-link">
         Don't have an account? Sign up
