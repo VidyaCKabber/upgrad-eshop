@@ -2,9 +2,13 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom'; // Use this for routing to the sign-up page
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import './SignIn.css'; 
+import Grid from '@mui/material/Grid'; // Import the Grid component
+import Card from '@mui/material/Card'; // Import the Card component
+import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
+import './SignIn.css';
+
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -18,40 +22,51 @@ const SignIn = () => {
 
   return (
     <div className="signin-container">
-      <div className="circular-container">
-        <LockOutlinedIcon className="lock-icon" />
+      <div className="centered-content">
+        <div className="circular-container">
+          <LockOutlinedIcon className="lock-icon" />
+        </div>
+        <Typography variant="h6" gutterBottom>
+          Sign In
+        </Typography>
+        <div className="signin-fields-container" style={{ width: '400px' }}>
+          <Grid>
+            <Card>
+              <TextField
+                label="Email ID"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Password"
+                variant="outlined"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSignIn}
+                fullWidth
+                sx={{ mt: 2 }}
+              >
+                Sign Up
+              </Button>
+            </Card>
+          </Grid>
+        </div>
       </div>
-      
-      <h1>Sign In</h1>
-      <TextField
-        label="Email ID"
-        variant="outlined"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Password"
-        variant="outlined"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSignIn}
-        fullWidth
-        sx={{ mt: 2 }}
-      >
-        Sign Up
-      </Button>
-      <a className="signup-link">
-        Don't have an account? Sign up
-      </a>
+      <div className="signup-link">
+        <Link to="/SignUp/SignUp.js" className="signup-link">
+          Don't have an account? Sign up
+        </Link>
+      </div>
     </div>
   );
 };
