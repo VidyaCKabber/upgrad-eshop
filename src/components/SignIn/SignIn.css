@@ -1,0 +1,35 @@
+/* SignIn.css */
+.signin-container {
+    margin-top: 20px;
+    display: grid;
+     /* Set the width for each column */
+    place-items: center;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+    /* height: 100vh; */ 
+     /* Set the container height to full viewport height */
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  /* CircularLockIcon.css */
+.circular-container {
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px; /* Set the desired size of the circle */
+    height: 30px; /* Set the desired size of the circle */
+    background-color: red;
+    border-radius: 50%;
+  }
+  
+  .lock-icon {
+    color: white; /* Set the desired color for the lock icon *//* Set the desired size for the lock icon */
+  }
+  
+  /* Add any additional styles for the sign-in page as needed */
+  

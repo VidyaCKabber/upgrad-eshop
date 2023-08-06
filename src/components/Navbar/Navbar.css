@@ -1,0 +1,28 @@
+/* Navbar.css */
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #3f51b5;
+  }
+  
+  .left-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .eshop-name {
+    margin-left: 10px;
+  }
+  
+  .right-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-link {
+    color: inherit;
+    text-decoration: none;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+  
