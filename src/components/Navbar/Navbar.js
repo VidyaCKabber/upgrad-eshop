@@ -1,26 +1,48 @@
-// Navbar.js
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import './Navbar.css'; // Create this CSS file to style the navigation bar
+import { AppBar, Toolbar, Typography, TextField, IconButton, InputAdornment } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = () => {
   return (
     <AppBar position="static">
       <Toolbar className="navbar-container">
         <div className="left-section">
-          <ShoppingCartIcon />
+          <div>
+            <ShoppingCartIcon />
+          </div>
           <Typography variant="h6" className="eshop-name">
             UpGrad E-Shop
           </Typography>
+          <div className="search">
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              size="small"
+              // onInput={(e) => {
+              //   setSearchQuery(e.target.value);
+              // }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
         </div>
         <div className="right-section">
-          <a to="/login" className="nav-link">
+          <Link to="/login" className="nav-link">
             Login
-          </a>
-          <a to="/signup" className="nav-link">
+          </Link>
+          <Link to="/signup" className="nav-link">
             Signup
-          </a>
+          </Link>
         </div>
       </Toolbar>
     </AppBar>
