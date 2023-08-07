@@ -13,11 +13,35 @@ import './SignIn.css';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null); // State for handling errors
 
-  const handleSignIn = () => {
-    // Handle sign-in logic here, e.g., make API requests or authentication checks
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const handleSignIn = async () => {
+    try {
+      setError(null);
+
+      if (!email || !password) {
+        setError('Email and password are required.');
+        return;
+      }
+
+      const signInData = {
+        username: email,
+        password: password,
+      };
+
+      await fetch('http://localhost:8080/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signInData),
+      })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => setError('Email and password are does not match.'));
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -49,6 +73,7 @@ const SignIn = () => {
                 fullWidth
                 margin="normal"
               />
+              {error && <div className="error-message">{error}</div>}
               <Button
                 variant="contained"
                 color="primary"

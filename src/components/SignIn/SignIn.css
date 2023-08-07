@@ -26,6 +26,9 @@
     flex-direction: column;
     align-items: center;
   }
+  .error-message{
+    color: red;
+  }
   /* .signin-fields-container{
     width: '400px';
   } */
