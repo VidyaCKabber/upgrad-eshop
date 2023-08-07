@@ -16,19 +16,39 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
   const [contactnumber, setContactNumber] = useState('');
+  const [error, setError] = useState(null);
+
+  const isEmailValid = (email) => {
+    // Regular expression for basic email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
 
   const handleSignUp = async () => {
-    // Construct the data object for the API request
-    const userData = {
-      email: email,
-      role: ['user'], // Specify user role as needed
-      password: password,
-      firstName: firstname,
-      lastName: lastname,
-      contactNumber: contactnumber,
-    };
-
     try {
+      setError(null);
+
+      if (!firstname || !lastname || !email || !password || !confirmpassword || !contactnumber) {
+        setError('All inputs are required.');
+        return;
+      }
+
+      if (!isEmailValid(email)) {
+        setError('Invalid email address.');
+        return;
+      }
+
+      // Construct the data object for the API request
+      const userData = {
+        email: email,
+        role: ['user'], // Specify user role as needed
+        password: password,
+        firstName: firstname,
+        lastName: lastname,
+        contactNumber: contactnumber,
+      };
+
+
       // Make the API request to sign up
       await fetch('http://localhost:8080/api/auth/signup',
         {
@@ -42,7 +62,7 @@ const SignIn = () => {
         .then(data => console.log(data))
         .catch(error => console.log(error));
     } catch (error) {
-      console.error('Error during signup:', error);
+      setError('An error occurred. Please try again.');
     }
   };
 
@@ -103,12 +123,12 @@ const SignIn = () => {
               <TextField
                 label="Contact Number *"
                 variant="outlined"
-                type="number"
                 value={contactnumber}
                 onChange={(e) => setContactNumber(e.target.value)}
                 fullWidth
                 margin="normal"
               />
+              {error && <div className="error-message">{error}</div>}
               <Button
                 variant="contained"
                 color="primary"
