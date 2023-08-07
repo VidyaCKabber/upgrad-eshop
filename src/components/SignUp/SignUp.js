@@ -17,10 +17,33 @@ const SignIn = () => {
   const [confirmpassword, setConfirmPassword] = useState('');
   const [contactnumber, setContactNumber] = useState('');
 
-  const handleSignUp = () => {
-    // Handle sign-in logic here, e.g., make API requests or authentication checks
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const handleSignUp = async () => {
+    // Construct the data object for the API request
+    const userData = {
+      email: email,
+      role: ['user'], // Specify user role as needed
+      password: password,
+      firstName: firstname,
+      lastName: lastname,
+      contactNumber: contactnumber,
+    };
+
+    try {
+      // Make the API request to sign up
+      await fetch('http://localhost:8080/api/auth/signup',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error));
+    } catch (error) {
+      console.error('Error during signup:', error);
+    }
   };
 
   return (
@@ -32,7 +55,7 @@ const SignIn = () => {
         <Typography variant="h6" gutterBottom>
           Sign Up
         </Typography>
-        <div className="signup-fields-container" style={{ width: '400px'}}>
+        <div className="signup-fields-container" style={{ width: '400px' }}>
           <Grid>
             <Card>
               <TextField
@@ -80,7 +103,7 @@ const SignIn = () => {
               <TextField
                 label="Contact Number *"
                 variant="outlined"
-                type="password"
+                type="number"
                 value={contactnumber}
                 onChange={(e) => setContactNumber(e.target.value)}
                 fullWidth
