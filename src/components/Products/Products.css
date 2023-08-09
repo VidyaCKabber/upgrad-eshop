@@ -4,5 +4,17 @@
     justify-content: center;
     padding: 20px;
   }
+.products-container{
+  margin-left: 5rem;
+  margin-right: 5rem;
+  margin-top: 2rem;
+}
+.sorting-dropdown{
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+.product-card-container{
+  margin-left: 4rem;
+}
 
  
