@@ -26,11 +26,12 @@
     margin-left: 20px;
     cursor: pointer;
   }
-  .search {
+  .search-container {
+    flex: 1;
     display: flex;
+    margin-left: 30em;
+    margin-right: auto;
     align-items: center;
-    flex-grow: 1; /* Add flex-grow to fill available space */
-    justify-content: center; /* Center the content horizontally */
     background-color: rgba(255, 255, 255, 0.1);
     border: #3f51b5; 
     /* Style for the search icon */
@@ -38,6 +39,7 @@
       color: white;
     }
   }
+  
   
   
   
