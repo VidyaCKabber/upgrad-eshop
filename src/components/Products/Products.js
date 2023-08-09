@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, Select, MenuItem } from '@mui/material/'; 
+import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid } from '@mui/material/'; 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import './Products.css';
+import shoe from './shoe.jpg';
 
-const availableCatagories = [
-    {
-      id: 1,
-      name: 'All',
-    },
-    {
-        id: 2,
-        name: 'APPEARANCE',
-    },
-    {
-        id: 3,
-        name: 'ELECTRONICS',
-    },
-    {
-        id: 4,
-        name: 'PERSONAL CARE',
-    },
+const availableCategories = [
+  { id: 1, name: 'All' },
+  { id: 2, name: 'APPEARANCE' },
+  { id: 3, name: 'ELECTRONICS' },
+  { id: 4, name: 'PERSONAL CARE' },
 ];
+
+const sortingOptions = [
+  { value: 'default', label: 'Default' },
+  { value: 'priceHighToLow', label: 'Price High to Low' },
+  { value: 'priceLowToHigh', label: 'Price Low to High' },
+  { value: 'newest', label: 'Newest' },
+];
+
 
 const products = [
   {
     id: 1,
     name: 'Product 1',
     price: '$10.99',
-    image: 'product1.jpg',
+    image: './Vidya_Kabber.jpg',
     details: 'Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...',
   },
   {
@@ -52,6 +49,35 @@ const products = [
     image: 'product1.jpg',
     details: 'Product details go here...',
   },
+  {
+    id: 3,
+    name: 'Product 1',
+    price: '$40',
+    image: 'product1.jpg',
+    details: 'Product details go here...',
+  },
+  {
+    id: 4,
+    name: 'Product 4',
+    price: '$109.1',
+    image: 'product1.jpg',
+    details: 'Product details go here...',
+  },
+  {
+    id: 3,
+    name: 'Product 1',
+    price: '$40',
+    image: 'product1.jpg',
+    details: 'Product details go here...',
+  },
+  {
+    id: 4,
+    name: 'Product 4',
+    price: '$109.1',
+    image: 'product1.jpg',
+    details: 'Product details go here...',
+  },
+  
   // ...add more products
 ];
 
@@ -63,7 +89,9 @@ function Products() {
     const [sortingOption, setSortingOption] = useState('default');
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [sortingDirection, setSortingDirection] = useState('asc');
+    const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0]);
 
+    
     const sortProducts = (option) => {
         const sortedProducts = [...selectedProducts];
 
@@ -111,61 +139,73 @@ function Products() {
     setSelectedCategory(newCategory);
   };
 
-  const handleSortingChange = (event, newSortingOption) => {
-    setSortingOption(newSortingOption);
+  const handleSortingChange = (_, newValue) => {
+    setSelectedSorting(newValue);
+  };
+
+  const handleSearch = () => {
+    // Perform search with selectedSorting.value and other logic
   };
 
 
   return (
     <div>
-        <div className="available-catagories">
-            <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
-                {availableCatagories.map(category => (
-                    <ToggleButton key={category.id} value={category.id}>
-                        {category.name}
-                    </ToggleButton>
-                ))} 
-            </ToggleButtonGroup>
-        </div>
-        <div className="sort-items">
-            <Select
-                value={sortingOption}
-                onChange={(event) => setSortingOption(event.target.value)}
-                variant="outlined"
-            >
-                <MenuItem value="default">Default</MenuItem>
-                <MenuItem value="priceHighToLow">Price High to Low</MenuItem>
-                <MenuItem value="priceLowToHigh">Price Low to High</MenuItem>
-                <MenuItem value="newest">Newest</MenuItem>
-            </Select>
-        </div>
-      <Grid container spacing={3}>
-        {products.map(product => (
-          <Grid item xs={4} key={product.id}>
-            <Card>
-              <CardContent>
-                <img src={product.image} alt={product.name} style={{ maxWidth: '100%' }} />
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="subtitle1">{product.price}</Typography>
-                <Typography>{product.details}</Typography>
-              </CardContent>
-              <CardActions>
-                <Button variant="contained" color="primary">
-                  Buy
-                </Button>
-                <div style={{ marginLeft: 'auto' }}>
-                  <IconButton aria-label="edit">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </div>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <div className="available-catagories">
+          <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
+              {availableCategories.map(category => (
+                  <ToggleButton key={category.id} value={category.id}>
+                      {category.name}
+                  </ToggleButton>
+              ))} 
+          </ToggleButtonGroup>
+      </div>
+      <div className="sorting-dropdown">
+        <Typography>Sort By :</Typography>
+        <Autocomplete
+          options={sortingOptions}
+          value={selectedSorting}
+          onChange={handleSortingChange}
+          getOptionLabel={option => option.label}
+          style={{ width: 300 }}
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant="outlined"
+              placeholder="Search..."
+            />
+          )}
+        />
+      </div>
+      <div className="products-container">
+
+        <Grid container spacing={3} >
+          {products.map(product => (
+            <Grid item xs={4} key={product.id}>
+              <Card className="product-card-container">
+                <CardContent>
+                  <img src={shoe} alt={product.name} style={{ maxWidth: '100%' }} />
+                  <Typography variant="h6">{product.name}</Typography>
+                  <Typography variant="subtitle1">{product.price}</Typography>
+                  <Typography>{product.details}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button variant="contained" color="primary">
+                    Buy
+                  </Button>
+                  <div style={{ marginLeft: 'auto' }}>
+                    <IconButton aria-label="edit">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
     </div>
   );
 }
