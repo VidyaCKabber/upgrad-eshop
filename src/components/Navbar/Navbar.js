@@ -16,24 +16,24 @@ const Navbar = () => {
           <Typography variant="h6" className="eshop-name">
             UpGrad E-Shop
           </Typography>
-          <div className="search">
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              size="small"
-              // onInput={(e) => {
-              //   setSearchQuery(e.target.value);
-              // }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+          <div className="search-container">
+              <TextField
+                variant="outlined"
+                placeholder="Search..."
+                size="small"
+                // onInput={(e) => {
+                //   setSearchQuery(e.target.value);
+                // }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
           </div>
         </div>
         <div className="right-section">
