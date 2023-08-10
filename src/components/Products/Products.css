@@ -16,5 +16,11 @@
 .product-card-container{
   margin-left: 4rem;
 }
+.row-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 
  
