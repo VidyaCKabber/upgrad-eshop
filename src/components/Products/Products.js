@@ -3,7 +3,7 @@ import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardCon
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import './Products.css';
-import shoe from './shoe.jpg';
+
 
 const availableCategories = [
   { id: 1, name: 'All' },
@@ -85,6 +85,7 @@ const products = [
 
 function Products() {
     const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [sortingOption, setSortingOption] = useState('default');
     const [selectedProducts, setSelectedProducts] = useState([]);
@@ -131,7 +132,7 @@ function Products() {
   useEffect(() => {
     fetch(`http://localhost:8080/api/products?category=${selectedCategory}&sort=${sortingOption}`)
       .then(response => response.json())
-      .then(data => setSelectedProducts(data))
+      .then(data => selectedProducts(data))
       .catch(error => console.error('Error fetching products:', error));
   }, [selectedCategory, sortingOption]);
 
@@ -146,6 +147,13 @@ function Products() {
   const handleSearch = () => {
     // Perform search with selectedSorting.value and other logic
   };
+
+  useEffect(() => {
+    fetch(`https://fakestoreapi.com/products`)
+      .then(response => response.json())
+      .then(data => setProducts(data))
+      .catch(error => console.error('Error fetching products:', error));
+  }, []);
 
 
   return (
@@ -179,7 +187,7 @@ function Products() {
       <div className="products-container">
 
         <Grid container spacing={3} >
-          {products.map(product => (
+          {/* {products.map(product => (
             <Grid item xs={4} key={product.id}>
               <Card className="product-card-container">
                 <CardContent>
@@ -187,6 +195,33 @@ function Products() {
                   <Typography variant="h6">{product.name}</Typography>
                   <Typography variant="subtitle1">{product.price}</Typography>
                   <Typography>{product.details}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button variant="contained" color="primary">
+                    Buy
+                  </Button>
+                  <div style={{ marginLeft: 'auto' }}>
+                    <IconButton aria-label="edit">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))} */}
+          {products.map(product => (
+            <Grid item xs={4} key={product.id}>
+              <Card className="product-card-container">
+                <CardContent>
+                    <img src={product.image} alt={product.title} style={{ width: '100%', height: '200px'}} />
+                  <div className="row-container">
+                    <Typography variant="h6">{product.title}</Typography>
+                    <Typography variant="subtitle1">₹ {product.price}</Typography>
+                  </div>
+                  <Typography>{product.description}</Typography>
                 </CardContent>
                 <CardActions>
                   <Button variant="contained" color="primary">
