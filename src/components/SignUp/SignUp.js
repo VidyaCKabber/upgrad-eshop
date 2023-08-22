@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom'; // Use this for routing to the sign-up page
+import Navbar from '../Navbar/Navbar.js';
+import { Link,useNavigate } from 'react-router-dom'; // Use this for routing to the sign-up page
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Grid from '@mui/material/Grid'; // Import the Grid component
 import Card from '@mui/material/Card'; // Import the Card component
@@ -10,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import './SignUp.css';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
@@ -17,6 +19,7 @@ const SignIn = () => {
   const [confirmpassword, setConfirmPassword] = useState('');
   const [contactnumber, setContactNumber] = useState('');
   const [error, setError] = useState(null);
+  const [successSignUp, setSuccessSignUp] = useState('');
 
   const isEmailValid = (email) => {
     // Regular expression for basic email validation
@@ -59,14 +62,26 @@ const SignIn = () => {
           body: JSON.stringify(userData),
         })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+          console.log(data);
+          console.log("Message : "+ data.message);
+          if(data.message ==='User registered successfully!'){ 
+                setSuccessSignUp(data.message); 
+          }
+      })
         .catch(error => console.log(error));
+        console.log("Response is : "+successSignUp);
+        if(successSignUp ==='User registered successfully!'){
+          navigate("/signin");
+        }
+
     } catch (error) {
       setError('An error occurred. Please try again.');
     }
   };
 
   return (
+    
     <div className="signup-container">
       <div className="centered-content">
         <div className="circular-container ">
@@ -143,7 +158,7 @@ const SignIn = () => {
         </div>
       </div>
       <div className="signin-link">
-        <Link to="/SignIn/SignIn.js" className="signup-link">
+        <Link to="/signin" className="signup-link">
           Already have an account? Sign in
         </Link>
       </div>

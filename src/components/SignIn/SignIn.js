@@ -1,22 +1,36 @@
 // SignIn.js
 import React, { useState } from 'react';
+import Navbar from '../Navbar/Navbar.js';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Grid from '@mui/material/Grid'; // Import the Grid component
 import Card from '@mui/material/Card'; // Import the Card component
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import './SignIn.css';
 
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null); // State for handling errors
+  const [authenticated, setAuthenticated] = useState({});
 
+  //const changeAuthentication = () =>{
+  //  
+  //}
   const handleSignIn = async () => {
     try {
+      // console.log(authenticated);
+      // setAuthenticated(true);
+      // console.log(authenticated);
+      // if(authenticated === true){
+      //   navigate("/products")
+      // }
+
+      
       setError(null);
 
       if (!email || !password) {
@@ -37,14 +51,30 @@ const SignIn = () => {
         body: JSON.stringify(signInData),
       })
         .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => setError('Email and password are does not match.'));
-    } catch (error) {
+        .then(data => {
+          console.log(data);
+          if(data.length !== 0){
+            setAuthenticated(data); 
+          } 
+        })
+       .catch(error => setError('Email and password are does not match.'));
+
+        // Below lines can be deleted, it was used for debugging purpose ###
+        //console.log("Value of authentication "+authenticated);
+        //console.log("Token :"+authenticated.token);
+        
+        if (authenticated.token !==''){
+          navigate("/products");
+        }
+               
+        } 
+        catch (error) {
       setError('An error occurred. Please try again.');
     }
   };
 
   return (
+    
     <div className="signin-container">
       <div className="centered-content">
         <div className="circular-container">
@@ -81,14 +111,14 @@ const SignIn = () => {
                 fullWidth
                 sx={{ mt: 2 }}
               >
-                Sign Up
+                SIGN IN
               </Button>
             </Card>
           </Grid>
         </div>
       </div>
       <div className="signup-link">
-        <Link to="/SignUp/SignUp.js" className="signup-link">
+        <Link to="/signup" className="signup-link">
           Don't have an account? Sign up
         </Link>
       </div>
