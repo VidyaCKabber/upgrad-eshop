@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Navbar from '../Navbar/Navbar.js';
-import { Link,useNavigate } from 'react-router-dom'; // Use this for routing to the sign-up page
+import { Link, useNavigate } from 'react-router-dom'; // Use this for routing to the sign-up page
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Grid from '@mui/material/Grid'; // Import the Grid component
 import Card from '@mui/material/Card'; // Import the Card component
@@ -35,9 +34,16 @@ const SignIn = () => {
         setError('All inputs are required.');
         return;
       }
-
-      if (!isEmailValid(email)) {
+      else if (!isEmailValid(email)) {
         setError('Invalid email address.');
+        return;
+      }
+      else if (password.length < 8) {
+        setError("Your password must be at least 8 characters including a lowercase letter, an uppercase letter, and a number");
+        return;
+      }
+      else if (password !== confirmpassword) {
+        setError("Passwords do not match");
         return;
       }
 
@@ -64,16 +70,16 @@ const SignIn = () => {
         .then(response => response.json())
         .then(data => {
           console.log(data);
-          console.log("Message : "+ data.message);
-          if(data.message ==='User registered successfully!'){ 
-                setSuccessSignUp(data.message); 
+          console.log("Message : " + data.message);
+          if (data.message === "Email is already in use!") {
+            setError("Email is already in use!");
           }
-      })
+          else if (data.message === 'User registered successfully!') {
+            setSuccessSignUp(data.message);
+            navigate("/signin");
+          }
+        })
         .catch(error => console.log(error));
-        console.log("Response is : "+successSignUp);
-        if(successSignUp ==='User registered successfully!'){
-          navigate("/signin");
-        }
 
     } catch (error) {
       setError('An error occurred. Please try again.');
@@ -81,7 +87,7 @@ const SignIn = () => {
   };
 
   return (
-    
+
     <div className="signup-container">
       <div className="centered-content">
         <div className="circular-container ">
