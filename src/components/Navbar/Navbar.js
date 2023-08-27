@@ -37,11 +37,11 @@ const Navbar = () => {
           </div>
         </div>
         <div className="right-section">
-          <Link to="/login" className="nav-link">
+          <Link to="/signin" className="nav-link">
             Login
           </Link>
           <Link to="/signup" className="nav-link">
-            Signup
+            SignUp
           </Link>
         </div>
       </Toolbar>

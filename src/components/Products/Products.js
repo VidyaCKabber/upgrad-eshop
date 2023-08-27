@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid } from '@mui/material/'; 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -225,7 +226,9 @@ function Products() {
                 </CardContent>
                 <CardActions>
                   <Button variant="contained" color="primary">
-                    Buy
+                    <Link to="/productDetails">
+                      Buy
+                      </Link>
                   </Button>
                   <div style={{ marginLeft: 'auto' }}>
                     <IconButton aria-label="edit">
