@@ -63,7 +63,8 @@ const SignIn = () => {
         //console.log("Value of authentication "+authenticated);
         //console.log("Token :"+authenticated.token);
         
-        if (authenticated.token !==''){
+        if (authenticated.token !=='' && authenticated.token !== undefined){
+          alert(authenticated.token)
           navigate("/products");
         }
                
