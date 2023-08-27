@@ -123,6 +123,8 @@ function Products() {
 
   // Fetch categories from /products/categories
   useEffect(() => {
+    const loginToken = localStorage.getItem('loginToken');
+    console.log(loginToken);
     fetch('http://localhost:8080/api/products/categories')
       .then(response => response.json())
       .then(data => setCategories(data))
