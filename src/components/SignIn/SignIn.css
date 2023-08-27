@@ -29,6 +29,10 @@
   .error-message{
     color: red;
   }
+  .signup-link{
+    padding-top: 20px;
+    margin-right: 5rem;
+  }
   /* .signin-fields-container{
     width: '400px';
   } */
