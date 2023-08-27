@@ -14,7 +14,6 @@ export default function App() {
   <BrowserRouter>
   <Navbar/>
   <Home />
-  
     <Routes>
       <Route exact path ="/products" element={<Products />}></Route>
       <Route exact path ="/productDetails" element={<ProductDetails />}></Route>
