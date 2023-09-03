@@ -24,32 +24,6 @@ function Products() {
     const [sortingDirection, setSortingDirection] = useState('asc');
     const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0]);
 
-    
-    const sortProducts = (option) => {
-        const sortedProducts = [...selectedProducts];
-
-        switch (option) {
-            case 'default':
-                // No need to sort, as products are already in default order
-                break;
-            case 'priceHighToLow':
-                sortedProducts.sort((a, b) => (sortingDirection === 'asc' ? b.price - a.price : a.price - b.price));
-                break;
-            case 'priceLowToHigh':
-                sortedProducts.sort((a, b) => (sortingDirection === 'asc' ? a.price - b.price : b.price - a.price));
-                break;
-            case 'newest':
-                sortedProducts.sort((a, b) => (sortingDirection === 'asc' ? new Date(b.dateModified) - new Date(a.dateModified) : new Date(a.dateModified) - new Date(b.dateModified)));
-                break;
-            default:
-                break;
-        }
-        setSelectedProducts(sortedProducts);
-    }
-
-    useEffect(() => {
-        sortProducts(sortingOption);
-    }, [sortingOption, sortingDirection]);
 
   const getAllCatagories = () => {
     fetch('http://localhost:8080/api/products/categories')
@@ -70,14 +44,6 @@ function Products() {
     getAllCatagories();
   }, []);
 
-  // // Fetch products based on selected category and sorting option
-  // useEffect(() => {
-  //   fetch(`http://localhost:8080/api/products?category=${selectedCategory}&sort=${sortingOption}`)
-  //     .then(response => response.json())
-  //     .then(data => selectedProducts(data))
-  //     .catch(error => console.error('Error fetching products:', error));
-  // }, [selectedCategory, sortingOption]);
-
   const handleCategoryChange = (event, newCategory) => {
     fetch(`http://localhost:8080/api/products`)
       .then(response => response.json())
@@ -91,10 +57,6 @@ function Products() {
         }
       })
       .catch(error => console.error('Error fetching products:', error));
-  };
-
-  const handleSortingChange = (_, newValue) => {
-    setSelectedSorting(newValue);
   };
 
   const handleSearch = () => {
@@ -111,7 +73,34 @@ function Products() {
     getAllProducts();
   }, []);
 
-  
+  const handleSortingChange = (newValue) => {
+    setSelectedSorting(newValue); // Update the selectedSorting state
+    fetch(`http://localhost:8080/api/products`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (newValue.value === "priceHighToLow") {
+          // Use Array.sort() to sort the data by price in ascending order
+          const filteredProducts = [...data].sort((a, b) => a.price - b.price);
+          setProducts(filteredProducts);
+        } else if (newValue.value === "priceLowToHigh") {
+          // Use Array.sort() to sort the data by price in ascending order
+          const filteredProducts = [...data].sort((a, b) => b.price - a.price);
+          setProducts(filteredProducts);
+        } 
+        else if (newValue.value === "newest") {
+          const filteredProducts = [...data]; // Copy the data array
+          filteredProducts.reverse();
+          setProducts(filteredProducts);
+        }
+
+        else {
+          getAllProducts();
+        }
+      })
+      .catch(error => console.error('Error fetching products:', error));
+  };
+
   return (
     <div>
       <div className="available-catagories">
@@ -127,10 +116,11 @@ function Products() {
         <Typography>Sort By :</Typography>
         <Autocomplete
           options={sortingOptions}
-          value={selectedSorting}
-          onChange={handleSortingChange}
+          value={selectedSorting} // Controlled by selectedSorting state
+          onChange={(event, newValue) => handleSortingChange(newValue)} // Pass selected value to handleSortingChange
           getOptionLabel={option => option.label}
           style={{ width: 300 }}
+          disableClearable={true} 
           renderInput={params => (
             <TextField
               {...params}
