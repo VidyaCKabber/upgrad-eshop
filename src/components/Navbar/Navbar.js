@@ -39,9 +39,6 @@ const Navbar = () => {
                 variant="outlined"
                 placeholder="Search..."
                 size="small"
-                // onInput={(e) => {
-                //   setSearchQuery(e.target.value);
-                // }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">

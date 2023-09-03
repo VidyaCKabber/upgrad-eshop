@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid } from '@mui/material/'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment } from '@mui/material/'; 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
 
 
@@ -23,8 +24,20 @@ function Products() {
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [sortingDirection, setSortingDirection] = useState('asc');
     const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0]);
+    // const [searchQuery, setSearchQuery]= useState();
 
-
+  // const handleSearch = () => {
+  //   // Use the searchQuery to filter products based on product names
+  //   if (searchQuery) {
+  //     const filteredProducts = products.filter((product) =>
+  //       product.catagory.toLowerCase().includes(searchQuery.toLowerCase())
+  //     );
+  //     setProducts(filteredProducts);
+  //   } else {
+  //     // If the search query is empty, reset the product list to all products
+  //     getAllProducts();
+  //   }
+  // };
   const getAllCatagories = () => {
     fetch('http://localhost:8080/api/products/categories')
       .then(response => response.json())
@@ -57,10 +70,6 @@ function Products() {
         }
       })
       .catch(error => console.error('Error fetching products:', error));
-  };
-
-  const handleSearch = () => {
-    // Perform search with selectedSorting.value and other logic
   };
 
   const getAllProducts = () => {
@@ -112,6 +121,24 @@ function Products() {
               ))} 
           </ToggleButtonGroup>
       </div>
+      {/* <div className="abc">
+              <TextField
+                variant="outlined"
+                placeholder="Search..."
+                size="small"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton onClick={handleSearch}>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+          </div> */}
       <div className="sorting-dropdown">
         <Typography>Sort By :</Typography>
         <Autocomplete
