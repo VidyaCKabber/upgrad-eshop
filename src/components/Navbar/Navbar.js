@@ -18,8 +18,6 @@ const Navbar = () => {
       setIsLoggedIn(false);
       navigate('/signin');
     }
-    console.log("-------------Navbar----isLoggedIn-------------");
-    console.log(isLoggedIn);
   }, []);
 
   useEffect(() => {
@@ -79,7 +77,6 @@ const Navbar = () => {
               </div>
             )
           }
-          
         </div>
       </Toolbar>
     </AppBar>

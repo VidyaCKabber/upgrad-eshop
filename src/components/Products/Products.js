@@ -136,11 +136,12 @@ function Products() {
             <Grid item xs={4} key={product.id}>
               <Card className="product-card-container">
                 <CardContent>
-                    <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '200px'}} />
-                  <div className="row-container">
+                    <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '200px'}} /><br/>
+                    <br/><div className="row-container">
                     <Typography variant="h6">{product.name}</Typography>
                     <Typography variant="subtitle1">₹ {product.price}</Typography>
                   </div>
+                  <br/>
                   <Typography>{product.description}</Typography>
                 </CardContent>
                 <CardActions>
