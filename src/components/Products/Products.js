@@ -90,11 +90,11 @@ function Products() {
         console.log(data);
         if (newValue.value === "priceHighToLow") {
           // Use Array.sort() to sort the data by price in ascending order
-          const filteredProducts = [...data].sort((a, b) => a.price - b.price);
+          const filteredProducts = [...data].sort((a, b) => b.price - a.price);
           setProducts(filteredProducts);
         } else if (newValue.value === "priceLowToHigh") {
           // Use Array.sort() to sort the data by price in ascending order
-          const filteredProducts = [...data].sort((a, b) => b.price - a.price);
+          const filteredProducts = [...data].sort((a, b) => a.price - b.price);
           setProducts(filteredProducts);
         } 
         else if (newValue.value === "newest") {
