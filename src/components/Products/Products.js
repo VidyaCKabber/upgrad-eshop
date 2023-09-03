@@ -6,13 +6,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import './Products.css';
 
 
-const availableCategories = [
-  { id: 1, name: 'All' },
-  { id: 2, name: 'APPEARANCE' },
-  { id: 3, name: 'ELECTRONICS' },
-  { id: 4, name: 'PERSONAL CARE' },
-];
-
 const sortingOptions = [
   { value: 'default', label: 'Default' },
   { value: 'priceHighToLow', label: 'Price High to Low' },
@@ -51,7 +44,6 @@ function Products() {
             default:
                 break;
         }
-
         setSelectedProducts(sortedProducts);
     }
 
@@ -59,30 +51,41 @@ function Products() {
         sortProducts(sortingOption);
     }, [sortingOption, sortingDirection]);
 
+  const getAllCatagories = () => {
+    fetch('http://localhost:8080/api/products/categories')
+      .then(response => response.json())
+      .then(data => { 
+        const uniqueValues = Array.from(new Set(data.map(item => item.toLowerCase()))).map(item => item.charAt(0).toUpperCase() + item.slice(1));
+        setCategories(uniqueValues)
+      })
+      .catch(error => console.error('Error fetching categories:', error));
+  }
   // Fetch categories from /products/categories
   useEffect(() => {
     const loginToken = localStorage.getItem('loginToken');
-    console.log("============local loginToken==========================");
-    console.log(loginToken);
     if (loginToken === '' || loginToken === undefined || loginToken === null){
         navigate('/signin')
     }
-    fetch('http://localhost:8080/api/products/categories')
-      .then(response => response.json())
-      .then(data => setCategories(data))
-      .catch(error => console.error('Error fetching categories:', error));
+    getAllCatagories();
   }, []);
 
-  // Fetch products based on selected category and sorting option
-  useEffect(() => {
-    fetch(`http://localhost:8080/api/products?category=${selectedCategory}&sort=${sortingOption}`)
-      .then(response => response.json())
-      .then(data => selectedProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
-  }, [selectedCategory, sortingOption]);
+  // // Fetch products based on selected category and sorting option
+  // useEffect(() => {
+  //   fetch(`http://localhost:8080/api/products?category=${selectedCategory}&sort=${sortingOption}`)
+  //     .then(response => response.json())
+  //     .then(data => selectedProducts(data))
+  //     .catch(error => console.error('Error fetching products:', error));
+  // }, [selectedCategory, sortingOption]);
 
   const handleCategoryChange = (event, newCategory) => {
-    setSelectedCategory(newCategory);
+    fetch(`http://localhost:8080/api/products`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
+        setProducts(filteredProducts);
+      })
+      .catch(error => console.error('Error fetching products:', error));
   };
 
   const handleSortingChange = (_, newValue) => {
@@ -93,21 +96,24 @@ function Products() {
     // Perform search with selectedSorting.value and other logic
   };
 
-  useEffect(() => {
+  const getAllProducts = () => {
     fetch(`http://localhost:8080/api/products`)
-      .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
+    .then(response => response.json())
+    .then(data => setProducts(data))
+    .catch(error => console.error('Error fetching products:', error));
+  }
+  useEffect(() => {
+    getAllProducts();
   }, []);
 
-
+  
   return (
     <div>
       <div className="available-catagories">
           <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
-              {availableCategories.map(category => (
-                  <ToggleButton key={category.id} value={category.id}>
-                      {category.name}
+              {categories.map(category => (
+                  <ToggleButton key={category} value={category}>
+                      {category}
                   </ToggleButton>
               ))} 
           </ToggleButtonGroup>
@@ -137,7 +143,7 @@ function Products() {
                 <CardContent>
                     <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '200px'}} />
                   <div className="row-container">
-                    <Typography variant="h6">{product.imageUrl}</Typography>
+                    <Typography variant="h6">{product.name}</Typography>
                     <Typography variant="subtitle1">₹ {product.price}</Typography>
                   </div>
                   <Typography>{product.description}</Typography>
