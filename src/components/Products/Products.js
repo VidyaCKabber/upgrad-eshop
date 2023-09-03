@@ -56,6 +56,7 @@ function Products() {
       .then(response => response.json())
       .then(data => { 
         const uniqueValues = Array.from(new Set(data.map(item => item.toLowerCase()))).map(item => item.charAt(0).toUpperCase() + item.slice(1));
+        uniqueValues.unshift("ALL")
         setCategories(uniqueValues)
       })
       .catch(error => console.error('Error fetching categories:', error));
@@ -82,8 +83,12 @@ function Products() {
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
-        setProducts(filteredProducts);
+        if(newCategory === "ALL"){
+          getAllProducts();
+        } else {
+          const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
+          setProducts(filteredProducts);
+        }
       })
       .catch(error => console.error('Error fetching products:', error));
   };
