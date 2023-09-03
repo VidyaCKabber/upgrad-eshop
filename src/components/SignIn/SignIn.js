@@ -18,7 +18,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null); // State for handling errors
   const [authenticated, setAuthenticated] = useState(false);
-  
+
 
   const handleSignIn = async () => {
     try {
@@ -42,14 +42,12 @@ const SignIn = () => {
         },
         body: JSON.stringify(signInData),
       })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          if (data.length !== 0) {
-            if (data.token !== '' && data.token !== undefined && data.token !== null) {
-              localStorage.setItem('loginToken', data.token);
-              setAuthenticated(true);
-            }
+        .then(response => {
+          const authToken = response.headers.get('x-auth-token');
+          console.log(authToken);
+          if (authToken !== '' && authToken !== undefined && authToken !== null) {
+            localStorage.setItem('loginToken', authToken);
+            setAuthenticated(true);
           }
         })
         .catch(error => setError('Email and password are does not match.'));

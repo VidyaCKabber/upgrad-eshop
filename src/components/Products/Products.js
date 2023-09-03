@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid } from '@mui/material/'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment } from '@mui/material/'; 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
 
-
-const availableCategories = [
-  { id: 1, name: 'All' },
-  { id: 2, name: 'APPEARANCE' },
-  { id: 3, name: 'ELECTRONICS' },
-  { id: 4, name: 'PERSONAL CARE' },
-];
 
 const sortingOptions = [
   { value: 'default', label: 'Default' },
@@ -21,70 +15,8 @@ const sortingOptions = [
 ];
 
 
-const products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    price: '$10.99',
-    image: './Vidya_Kabber.jpg',
-    details: 'Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...Product details go here...',
-  },
-  {
-    id: 2,
-    name: 'Product 1',
-    price: '$9.99',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  {
-    id: 3,
-    name: 'Product 1',
-    price: '$40',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    price: '$109.1',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  {
-    id: 3,
-    name: 'Product 1',
-    price: '$40',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    price: '$109.1',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  {
-    id: 3,
-    name: 'Product 1',
-    price: '$40',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    price: '$109.1',
-    image: 'product1.jpg',
-    details: 'Product details go here...',
-  },
-  
-  // ...add more products
-];
-
-
-
 function Products() {
+    const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -92,92 +24,130 @@ function Products() {
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [sortingDirection, setSortingDirection] = useState('asc');
     const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0]);
+    // const [searchQuery, setSearchQuery]= useState();
 
-    
-    const sortProducts = (option) => {
-        const sortedProducts = [...selectedProducts];
-
-        switch (option) {
-            case 'default':
-                // No need to sort, as products are already in default order
-                break;
-            case 'priceHighToLow':
-                sortedProducts.sort((a, b) => (sortingDirection === 'asc' ? b.price - a.price : a.price - b.price));
-                break;
-            case 'priceLowToHigh':
-                sortedProducts.sort((a, b) => (sortingDirection === 'asc' ? a.price - b.price : b.price - a.price));
-                break;
-            case 'newest':
-                sortedProducts.sort((a, b) => (sortingDirection === 'asc' ? new Date(b.dateModified) - new Date(a.dateModified) : new Date(a.dateModified) - new Date(b.dateModified)));
-                break;
-            default:
-                break;
-        }
-
-        setSelectedProducts(sortedProducts);
-    }
-
-    useEffect(() => {
-        sortProducts(sortingOption);
-    }, [sortingOption, sortingDirection]);
-
+  // const handleSearch = () => {
+  //   // Use the searchQuery to filter products based on product names
+  //   if (searchQuery) {
+  //     const filteredProducts = products.filter((product) =>
+  //       product.catagory.toLowerCase().includes(searchQuery.toLowerCase())
+  //     );
+  //     setProducts(filteredProducts);
+  //   } else {
+  //     // If the search query is empty, reset the product list to all products
+  //     getAllProducts();
+  //   }
+  // };
+  const getAllCatagories = () => {
+    fetch('http://localhost:8080/api/products/categories')
+      .then(response => response.json())
+      .then(data => { 
+        const uniqueValues = Array.from(new Set(data.map(item => item.toLowerCase()))).map(item => item.charAt(0).toUpperCase() + item.slice(1));
+        uniqueValues.unshift("ALL")
+        setCategories(uniqueValues)
+      })
+      .catch(error => console.error('Error fetching categories:', error));
+  }
   // Fetch categories from /products/categories
   useEffect(() => {
     const loginToken = localStorage.getItem('loginToken');
-    console.log(loginToken);
-    fetch('http://localhost:8080/api/products/categories')
-      .then(response => response.json())
-      .then(data => setCategories(data))
-      .catch(error => console.error('Error fetching categories:', error));
+    if (loginToken === '' || loginToken === undefined || loginToken === null){
+        navigate('/signin')
+    }
+    getAllCatagories();
   }, []);
-
-  // Fetch products based on selected category and sorting option
-  useEffect(() => {
-    fetch(`http://localhost:8080/api/products?category=${selectedCategory}&sort=${sortingOption}`)
-      .then(response => response.json())
-      .then(data => selectedProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
-  }, [selectedCategory, sortingOption]);
 
   const handleCategoryChange = (event, newCategory) => {
-    setSelectedCategory(newCategory);
-  };
-
-  const handleSortingChange = (_, newValue) => {
-    setSelectedSorting(newValue);
-  };
-
-  const handleSearch = () => {
-    // Perform search with selectedSorting.value and other logic
-  };
-
-  useEffect(() => {
-    fetch(`https://fakestoreapi.com/products`)
+    fetch(`http://localhost:8080/api/products`)
       .then(response => response.json())
-      .then(data => setProducts(data))
+      .then(data => {
+        console.log(data);
+        if(newCategory === "ALL"){
+          getAllProducts();
+        } else {
+          const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
+          setProducts(filteredProducts);
+        }
+      })
       .catch(error => console.error('Error fetching products:', error));
+  };
+
+  const getAllProducts = () => {
+    fetch(`http://localhost:8080/api/products`)
+    .then(response => response.json())
+    .then(data => setProducts(data))
+    .catch(error => console.error('Error fetching products:', error));
+  }
+  useEffect(() => {
+    getAllProducts();
   }, []);
 
+  const handleSortingChange = (newValue) => {
+    setSelectedSorting(newValue); // Update the selectedSorting state
+    fetch(`http://localhost:8080/api/products`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (newValue.value === "priceHighToLow") {
+          // Use Array.sort() to sort the data by price in ascending order
+          const filteredProducts = [...data].sort((a, b) => b.price - a.price);
+          setProducts(filteredProducts);
+        } else if (newValue.value === "priceLowToHigh") {
+          // Use Array.sort() to sort the data by price in ascending order
+          const filteredProducts = [...data].sort((a, b) => a.price - b.price);
+          setProducts(filteredProducts);
+        } 
+        else if (newValue.value === "newest") {
+          const filteredProducts = [...data]; // Copy the data array
+          filteredProducts.reverse();
+          setProducts(filteredProducts);
+        }
+
+        else {
+          getAllProducts();
+        }
+      })
+      .catch(error => console.error('Error fetching products:', error));
+  };
 
   return (
     <div>
       <div className="available-catagories">
           <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
-              {availableCategories.map(category => (
-                  <ToggleButton key={category.id} value={category.id}>
-                      {category.name}
+              {categories.map(category => (
+                  <ToggleButton key={category} value={category}>
+                      {category}
                   </ToggleButton>
               ))} 
           </ToggleButtonGroup>
       </div>
+      {/* <div className="abc">
+              <TextField
+                variant="outlined"
+                placeholder="Search..."
+                size="small"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton onClick={handleSearch}>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+          </div> */}
       <div className="sorting-dropdown">
         <Typography>Sort By :</Typography>
         <Autocomplete
           options={sortingOptions}
-          value={selectedSorting}
-          onChange={handleSortingChange}
+          value={selectedSorting} // Controlled by selectedSorting state
+          onChange={(event, newValue) => handleSortingChange(newValue)} // Pass selected value to handleSortingChange
           getOptionLabel={option => option.label}
           style={{ width: 300 }}
+          disableClearable={true} 
           renderInput={params => (
             <TextField
               {...params}
@@ -188,49 +158,22 @@ function Products() {
         />
       </div>
       <div className="products-container">
-
         <Grid container spacing={3} >
-          {/* {products.map(product => (
-            <Grid item xs={4} key={product.id}>
-              <Card className="product-card-container">
-                <CardContent>
-                  <img src={shoe} alt={product.name} style={{ maxWidth: '100%' }} />
-                  <Typography variant="h6">{product.name}</Typography>
-                  <Typography variant="subtitle1">{product.price}</Typography>
-                  <Typography>{product.details}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Button variant="contained" color="primary">
-                    Buy
-                  </Button>
-                  <div style={{ marginLeft: 'auto' }}>
-                    <IconButton aria-label="edit">
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </div>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))} */}
           {products.map(product => (
             <Grid item xs={4} key={product.id}>
               <Card className="product-card-container">
                 <CardContent>
-                    <img src={product.image} alt={product.title} style={{ width: '100%', height: '200px'}} />
-                  <div className="row-container">
-                    <Typography variant="h6">{product.title}</Typography>
+                    <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '200px'}} /><br/>
+                    <br/><div className="row-container">
+                    <Typography variant="h6">{product.name}</Typography>
                     <Typography variant="subtitle1">₹ {product.price}</Typography>
                   </div>
+                  <br/>
                   <Typography>{product.description}</Typography>
                 </CardContent>
                 <CardActions>
                   <Button variant="contained" color="primary">
-                    <Link to="/productDetails">
-                      Buy
-                      </Link>
+                  <Link to={`/productDetails/${product.id}`}>Buy</Link>
                   </Button>
                   <div style={{ marginLeft: 'auto' }}>
                     <IconButton aria-label="edit">

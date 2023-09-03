@@ -4,8 +4,10 @@
 			"path": "../../.."
 		},
 		{
-			"path": "../../../../../Back-End/ecommerce-upgrad-master"
+			"path": "../../../../../Back-End/ecommerce-upgrad"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic"
+	}
 }
