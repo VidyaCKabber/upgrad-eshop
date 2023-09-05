@@ -4,12 +4,11 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import './ProductDetails.css'; // Import your CSS file for styling
-import shoe from './shoe.jpg'; // Replace with your actual image import
+import './ProductDetails.css';
 import { useParams } from 'react-router-dom';
 
 function ProductDetails() {
-  const { id } = useParams(); // This retrieves the product ID from the route parameters
+  const { id } = useParams(); 
   const [product, setProductDetails] = useState([]);
 
   useEffect(() => {
