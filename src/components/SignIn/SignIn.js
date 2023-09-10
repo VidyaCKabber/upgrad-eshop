@@ -35,24 +35,28 @@ const SignIn = () => {
         password: password,
       };
 
-      await fetch('http://localhost:8080/api/auth/signin', {
+      const response = await fetch('http://localhost:8080/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(signInData),
-      })
-        .then(response => {
-          const authToken = response.headers.get('x-auth-token');
-          console.log(authToken);
-          if (authToken !== '' && authToken !== undefined && authToken !== null) {
-            localStorage.setItem('loginToken', authToken);
-            setAuthenticated(true);
-          }
-        })
-        .catch(error => setError('Email and password are does not match.'));
+      });
+
+      if (!response.ok) {
+        setError('Failed to sign in');
+      }
+
+      const data = await response.json();
+      const userRole = data.roles[0] || null;
+      const authToken = response.headers.get('x-auth-token') || '';
+      if (authToken !== '' && authToken !== undefined && authToken !== null) {
+        localStorage.setItem('loggedInUserRole', userRole);
+        localStorage.setItem('loginToken', authToken);
+        setAuthenticated(true);
+      }
     } catch {
-      setError('An error occurred. Please try again.');
+      setError('Email and password are does not match.');
       return;
     }
   };

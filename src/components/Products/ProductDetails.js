@@ -4,15 +4,18 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import './ProductDetails.css'; // Import your CSS file for styling
-import shoe from './shoe.jpg'; // Replace with your actual image import
-import { useParams } from 'react-router-dom';
+import './ProductDetails.css';
+import { useParams, useNavigate } from 'react-router-dom';
+import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilter'; 
+
 
 function ProductDetails() {
-  const { id } = useParams(); // This retrieves the product ID from the route parameters
+  const navigate = useNavigate();
+  const { id } = useParams(); 
   const [product, setProductDetails] = useState([]);
 
   useEffect(() => {
+    localStorage.setItem('selectedProductId', id);
     // Fetch the product details based on the product ID
     fetch(`http://localhost:8080/api/products/${id}`)
       .then(response => response.json())
@@ -28,8 +31,13 @@ function ProductDetails() {
     return <div>Loading...</div>;
   } 
 
+  const handleCategoryChange = (newCategory) => {
+    navigate('/products');
+  }
+
   return (
     <div item xs={1} key="1">
+      <CategoryFilter onCategoryChange={handleCategoryChange} />
       {product.map(p => (
         <div className="product-details-container">
         <div className="product-details-card">
