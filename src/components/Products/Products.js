@@ -6,6 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
+import { Snackbar, SnackbarContent } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const sortingOptions = [
@@ -26,7 +28,24 @@ function Products() {
   const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0]);
   const [searchQuery, setSearchQuery] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
+  
+  const handleDeleteProduct = () => {
+    setIsAlertOpen(true);
+    // implement delete code here
+  };
+
+  const handleEditProduct = () => {
+    
+    // implement delete code here
+  };
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setIsAlertOpen(false);
+  };
   const getAllProducts = () => {
     fetch(`http://localhost:8080/api/products`)
       .then(response => response.json())
@@ -180,14 +199,38 @@ function Products() {
                   <Button variant="contained" style={{ backgroundColor: '#3f51b5' }}>
                     <Link to={`/productDetails/${product.id}`} style={{ color: 'white', textDecoration: 'none'}}>BUY</Link>
                   </Button>
-                  {userRole == "ADMIN" ?
-                    <div style={{ marginLeft: 'auto' }}>
-                      <IconButton aria-label="edit">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton aria-label="delete">
-                        <DeleteIcon />
-                      </IconButton>
+                  {userRole === "ADMIN" ?
+                    <div>
+                      <div style={{ marginLeft: 'auto' }}>
+                        <IconButton aria-label="edit" onClick={handleEditProduct}>
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton aria-label="delete" onClick={handleDeleteProduct}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                      <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        open={isAlertOpen}
+                        onClose={handleCloseAlert}
+                      >
+                        <SnackbarContent
+                          style={{ backgroundColor: '#FF4233', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
+                          message={
+                            <span>
+                              Item deleted
+                              <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={handleCloseAlert}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </span>
+                          }
+                        />
+                      </Snackbar>
                     </div>
                     :
                     null
