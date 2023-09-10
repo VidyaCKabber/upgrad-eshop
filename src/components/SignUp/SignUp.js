@@ -116,7 +116,7 @@ const SignIn = () => {
                 margin="normal"
               />
               <TextField
-                label="Email Address*"
+                label="Email Address *"
                 variant="outlined"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -156,6 +156,7 @@ const SignIn = () => {
                 onClick={handleSignUp}
                 fullWidth
                 sx={{ mt: 2 }}
+                style={{ backgroundColor: '#3f51b5' }}
               >
                 Sign Up
               </Button>

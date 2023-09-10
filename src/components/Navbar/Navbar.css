@@ -19,6 +19,8 @@
   .right-section {
     display: flex;
     align-items: center;
+    margin-right: 20px;
+    gap: 0.5rem;
   }
   .nav-link {
     color: inherit;
@@ -30,7 +32,7 @@
     flex: 1;
     display: flex;
     margin-left: 30em;
-    margin-right: 30em;
+    /* margin-right: 30em; */
     align-items: center;
     background-color: rgba(255, 255, 255, 0.1);
     border: #3f51b5; 
