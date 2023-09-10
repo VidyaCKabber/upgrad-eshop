@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, TextField, IconButton, InputAdornment } fr
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
+
 import './Navbar.css';
 
 const Navbar = () => {

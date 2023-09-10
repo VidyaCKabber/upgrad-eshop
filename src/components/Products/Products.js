@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
+import CategoryFilter from './CategoryFilter';
 
 
 const sortingOptions = [
@@ -20,15 +21,24 @@ function Products() {
   const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortingOption, setSortingOption] = useState('default');
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [sortingDirection, setSortingDirection] = useState('asc');
   const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [userRole, setUserRole] = useState('');
+
+  const getAllProducts = () => {
+    fetch(`http://localhost:8080/api/products`)
+      .then(response => response.json())
+      .then(data => {
+        setProducts(data);
+        setAllProducts(data);
+      })
+      .catch(error => console.error('Error fetching products:', error));
+  }
 
   useEffect(() => {
-    getAllCatagories();
+    // getAllCatagories();
     const params = new URLSearchParams(location.search);
     const query = params.get('search');
     if (query) {
@@ -36,19 +46,6 @@ function Products() {
       setSearchQuery(query);
     }
   }, [location.search]);
-
-  useEffect(() => {
-    if (searchQuery) {
-      // Filter products based on the search query
-      const filteredProducts = products.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setProducts(filteredProducts);
-    } else {
-      // If the search query is empty, reset the product list to all products
-      getAllProducts();
-    }
-  }, [searchQuery]);
 
   const getAllCatagories = () => {
     fetch('http://localhost:8080/api/products/categories')
@@ -62,6 +59,8 @@ function Products() {
   }
   // Fetch categories from /products/categories
   useEffect(() => {
+    const loggedInUserRole = localStorage.getItem('loggedInUserRole');
+    setUserRole(loggedInUserRole);
     const loginToken = localStorage.getItem('loginToken');
     if (loginToken === '' || loginToken === undefined || loginToken === null) {
       navigate('/signin')
@@ -69,30 +68,36 @@ function Products() {
     getAllCatagories();
   }, []);
 
-  const handleCategoryChange = (event, newCategory) => {
-    fetch(`http://localhost:8080/api/products`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        if (newCategory === "ALL") {
-          getAllProducts();
-        } else {
-          const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
-          setProducts(filteredProducts);
-        }
-      })
-      .catch(error => console.error('Error fetching products:', error));
-  };
+  // const handleCategoryChange = (event, newCategory) => {
+  //   fetch(`http://localhost:8080/api/products`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //       if (newCategory === "ALL") {
+  //         getAllProducts();
+  //       } else {
+  //         const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
+  //         setProducts(filteredProducts);
+  //       }
+  //     })
+  //     .catch(error => console.error('Error fetching products:', error));
+  // };
 
-  const getAllProducts = () => {
-    fetch(`http://localhost:8080/api/products`)
-      .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
-  }
+
   useEffect(() => {
     getAllProducts();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const filteredProducts = allProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setProducts(filteredProducts);
+    } else {
+      getAllProducts();
+    }
+  }, [searchQuery]);
 
   const handleSortingChange = (newValue) => {
     setSelectedSorting(newValue); // Update the selectedSorting state
@@ -121,16 +126,30 @@ function Products() {
       .catch(error => console.error('Error fetching products:', error));
   };
 
+  const handleCategoryChange = (newCategory) => {
+    setSelectedCategory(newCategory);
+    // Depending on the newCategory value, you can filter products accordingly
+    // Fetch products based on the selected category
+    if (newCategory === "ALL") {
+      getAllProducts();
+    } else {
+      //getAllProducts();
+      const filteredProducts = allProducts.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
+      setProducts(filteredProducts);
+    }
+  };
+
   return (
     <div>
       <div className="available-catagories">
-        <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
+        {/* <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
           {categories.map(category => (
             <ToggleButton key={category} value={category}>
               {category}
             </ToggleButton>
           ))}
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
+        <CategoryFilter onCategoryChange={handleCategoryChange} />
       </div>
       <div className="sorting-dropdown">
         <Typography>Sort By :</Typography>
@@ -168,14 +187,19 @@ function Products() {
                   <Button variant="contained" color="primary">
                     <Link to={`/productDetails/${product.id}`}>Buy</Link>
                   </Button>
-                  <div style={{ marginLeft: 'auto' }}>
-                    <IconButton aria-label="edit">
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </div>
+                  {userRole == "ADMIN" ?
+                    <div style={{ marginLeft: 'auto' }}>
+                      <IconButton aria-label="edit">
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton aria-label="delete">
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                    :
+                    null
+                  }
+
                 </CardActions>
               </Card>
             </Grid>
