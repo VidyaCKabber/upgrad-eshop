@@ -30,7 +30,7 @@ function Products() {
   const [userRole, setUserRole] = useState('');
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
-  
+
   const handleDeleteProduct = () => {
     setIsAlertOpen(true);
     // implement delete code here
@@ -200,8 +200,8 @@ function Products() {
                     <Link to={`/productDetails/${product.id}`} style={{ color: 'white', textDecoration: 'none'}}>BUY</Link>
                   </Button>
                   {userRole === "ADMIN" ?
-                    <div>
-                      <div style={{ marginLeft: 'auto' }}>
+                    <div style={{ marginLeft: 'auto'}}>
+                      <div>
                         <IconButton aria-label="edit" onClick={handleEditProduct}>
                           <EditIcon />
                         </IconButton>
