@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import './ProductDetails.css';
 import { useParams, useNavigate } from 'react-router-dom';
-import CategoryFilter from './CategoryFilter'; 
+import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilter'; 
 
 
 function ProductDetails() {

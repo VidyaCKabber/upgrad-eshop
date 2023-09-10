@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Autocomplete, TextField, ToggleButton, ToggleButtonGroup, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment } from '@mui/material/';
+import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilter';
+import { Autocomplete, TextField, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment } from '@mui/material/';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
-import CategoryFilter from './CategoryFilter';
 
 
 const sortingOptions = [
@@ -142,13 +142,6 @@ function Products() {
   return (
     <div>
       <div className="available-catagories">
-        {/* <ToggleButtonGroup value={selectedCategory} exclusive onChange={handleCategoryChange}>
-          {categories.map(category => (
-            <ToggleButton key={category} value={category}>
-              {category}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup> */}
         <CategoryFilter onCategoryChange={handleCategoryChange} />
       </div>
       <div className="sorting-dropdown">

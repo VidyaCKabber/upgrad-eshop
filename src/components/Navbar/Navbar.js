@@ -3,36 +3,48 @@ import { AppBar, Toolbar, Typography, TextField, IconButton, InputAdornment } fr
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
-
 import './Navbar.css';
+import e from 'cors';
+
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [authToken, setAuthToken] = useState('');
 
-
-  useEffect(() => {
-    const authToken = localStorage.getItem('loginToken');
-    if (authToken !== '' && authToken !== undefined && authToken !== null) {
-      setIsLoggedIn(true);
-      navigate('/products');
-    } else {
-      setIsLoggedIn(false);
-      navigate('/signin');
-    }
-  }, []);
+  // useEffect(() => {
+  //   const authToken = localStorage.getItem('loginToken');
+  //   if (authToken !== '' && authToken !== undefined && authToken !== null) {
+  //     setIsLoggedIn(true);
+  //     navigate('/products');
+  //   } else {
+  //     setIsLoggedIn(false);
+  //     navigate('/signin');
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log("======updated==========" + isLoggedIn);
-  }, [isLoggedIn])
-
+    const auth_token = localStorage.getItem('loginToken');
+    setAuthToken(auth_token);
+    if (auth_token === '' || auth_token === undefined || auth_token == null){
+      setIsLoggedIn(false);
+      navigate('/signin');
+    } else {
+      setIsLoggedIn(true);
+      navigate('/products');
+    }
+  }, [authToken])
 
   const handleSearch = () => {
     if (searchQuery.trim() !== '') {
       // Navigate to the Products page with the search query as a URL parameter
       navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
-    } 
+    } else {
+      // Navigate to the Products page without a search query
+      navigate('/products');
+    }
   };
 
   return (
@@ -70,7 +82,7 @@ const Navbar = () => {
           </div>
         </div>
         <div className="right-section">
-          {isLoggedIn ? (
+          {isLoggedIn === true ? (
             <div>
               <Link to="/home" className="nav-link">
                 Home
