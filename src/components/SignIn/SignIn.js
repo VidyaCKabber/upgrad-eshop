@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Link, useNavigate } from 'react-router-dom';
 import './SignIn.css';
 import { SignalCellularNullRounded } from '@mui/icons-material';
+import { colors } from '@mui/material';
 
 
 const SignIn = () => {
@@ -82,7 +83,7 @@ const SignIn = () => {
           <Grid>
             <Card>
               <TextField
-                label="Email ID"
+                label="Email Address *"
                 variant="outlined"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -90,7 +91,7 @@ const SignIn = () => {
                 margin="normal"
               />
               <TextField
-                label="Password"
+                label="Password *"
                 variant="outlined"
                 type="password"
                 value={password}
@@ -101,10 +102,10 @@ const SignIn = () => {
               {error && <div className="error-message">{error}</div>}
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleSignIn}
                 fullWidth
                 sx={{ mt: 2 }}
+                style={{ backgroundColor: '#3f51b5' }}
               >
                 SIGN IN
               </Button>

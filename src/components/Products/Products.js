@@ -10,8 +10,8 @@ import './Products.css';
 
 const sortingOptions = [
   { value: 'default', label: 'Default' },
-  { value: 'priceHighToLow', label: 'Price High to Low' },
-  { value: 'priceLowToHigh', label: 'Price Low to High' },
+  { value: 'priceHighToLow', label: 'Price: High to Low' },
+  { value: 'priceLowToHigh', label: 'Price: Low to High' },
   { value: 'newest', label: 'Newest' },
 ];
 
@@ -145,7 +145,7 @@ function Products() {
         <CategoryFilter onCategoryChange={handleCategoryChange} />
       </div>
       <div className="sorting-dropdown">
-        <Typography>Sort By :</Typography>
+        <Typography>Sort By : </Typography>
         <Autocomplete
           options={sortingOptions}
           value={selectedSorting} // Controlled by selectedSorting state
@@ -177,8 +177,8 @@ function Products() {
                   <Typography>{product.description}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Button variant="contained" color="primary">
-                    <Link to={`/productDetails/${product.id}`}>Buy</Link>
+                  <Button variant="contained" style={{ backgroundColor: '#3f51b5' }}>
+                    <Link to={`/productDetails/${product.id}`} style={{ color: 'white', textDecoration: 'none'}}>BUY</Link>
                   </Button>
                   {userRole == "ADMIN" ?
                     <div style={{ marginLeft: 'auto' }}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, TextField, IconButton, InputAdornment } from '@mui/material';
+import { AppBar, Toolbar, Typography, TextField, IconButton, InputAdornment, Button } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -13,28 +13,21 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [authToken, setAuthToken] = useState('');
 
-  // useEffect(() => {
-  //   const authToken = localStorage.getItem('loginToken');
-  //   if (authToken !== '' && authToken !== undefined && authToken !== null) {
-  //     setIsLoggedIn(true);
-  //     navigate('/products');
-  //   } else {
-  //     setIsLoggedIn(false);
-  //     navigate('/signin');
-  //   }
-  // }, []);
+  useEffect(() => {
+    const authToken = localStorage.getItem('loginToken');
+    if (authToken !== '' && authToken !== undefined && authToken !== null) {
+      setIsLoggedIn(true);
+      navigate('/products');
+    } else {
+      setIsLoggedIn(false);
+      navigate('/signin');
+    }
+  }, []);
 
   useEffect(() => {
     console.log("======updated==========" + isLoggedIn);
     const auth_token = localStorage.getItem('loginToken');
-    setAuthToken(auth_token);
-    if (auth_token === '' || auth_token === undefined || auth_token == null) {
-      setIsLoggedIn(false);
-      navigate('/signin');
-    } else {
-      setIsLoggedIn(true);
-      navigate('/products');
-    }
+    console.log(auth_token);
   }, [authToken])
 
   const handleSearch = () => {
@@ -47,6 +40,9 @@ const Navbar = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    navigate('/logout')
+  }
   return (
     <AppBar position="static">
       <Toolbar className="navbar-container">
@@ -57,7 +53,7 @@ const Navbar = () => {
           <Typography variant="h6" className="eshop-name">
             UpGrad E-Shop
           </Typography>
-          {isLoggedIn === true && location.pathname !== '/signin' ?
+          {(location.pathname !== '/signin' && location.pathname !== '/signup') ?
             <div className="search-container">
               <TextField
                 variant="outlined"
@@ -87,17 +83,19 @@ const Navbar = () => {
 
         </div>
         <div className="right-section">
-          {isLoggedIn === true && (location.pathname !== '/signin') ? (
+          {(location.pathname !== '/signin' && location.pathname !== '/signup') ? (
             <div>
               <Link to="/home" className="nav-link">
                 Home
               </Link>
-              <Link to="/addproduct" className="nav-link">
+              <Link to="/addproduct" className="nav-link" style={{ marginRight: '20px' }}>
                 Add Product
               </Link>
-              <Link to="/logout" className="nav-link">
+              <Button className="logout-button" style={{ backgroundColor: '#FF3368', color: 'white', textAlign: 'center' }}
+                onClick={handleSignOut}
+              >
                 Logout
-              </Link>
+              </Button>
             </div>
           )
             :
