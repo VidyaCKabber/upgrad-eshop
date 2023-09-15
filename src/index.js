@@ -10,7 +10,7 @@ import PlaceOrder from './components/PlaceOrder/PlaceOrder.js'
 import ProductDetails from './components/Products/ProductDetails.js';
 import ConfirmOrder  from './components/ConfirmOrder/ConfirmOrder';
 import Logout from './components/Logout/Logout.js'
-import { BrowserRouter, Routes, Route  } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AddProduct from './components/Products/AddProduct.js';
 
 export default function App() {
