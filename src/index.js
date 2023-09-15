@@ -12,6 +12,7 @@ import ConfirmOrder  from './components/ConfirmOrder/ConfirmOrder';
 import Logout from './components/Logout/Logout.js'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AddProduct from './components/Products/AddProduct.js';
+import ModifyProduct from './components/Products/ModifyProduct.js'
 
 export default function App() {
   return (  
@@ -28,6 +29,7 @@ export default function App() {
       <Route exact path="/addproduct" element={<AddProduct />}></Route>
       <Route exact path="/logout" element={<Logout />}></Route>
       <Route exact path="/confirmOrder" element={<ConfirmOrder />}></Route>
+      <Route path="/modifyProduct/:id" element={<ModifyProduct />}></Route>
     </Routes>
   </BrowserRouter>);
 }
