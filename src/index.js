@@ -6,7 +6,9 @@ import SignUp from './components/SignUp/SignUp.js';
 import Navbar from './components/Navbar/Navbar.js';
 import Home from './components/Home/Home.js';
 import Products from './components/Products/Products.js';
+import PlaceOrder from './components/PlaceOrder/PlaceOrder.js'
 import ProductDetails from './components/Products/ProductDetails.js';
+import ConfirmOrder  from './components/ConfirmOrder/ConfirmOrder';
 import Logout from './components/Logout/Logout.js'
 import { BrowserRouter, Routes, Route  } from 'react-router-dom';
 import AddProduct from './components/Products/AddProduct.js';
@@ -22,8 +24,10 @@ export default function App() {
       <Route exact path="/signin" element={<SignIn />}></Route>
       <Route exact path="/signup" element={<SignUp />}></Route>
       <Route exact path="/home" element={<Home />}></Route>
+      <Route exact path="/placeOrder" element={<PlaceOrder />}></Route>
       <Route exact path="/addproduct" element={<AddProduct />}></Route>
       <Route exact path="/logout" element={<Logout />}></Route>
+      <Route exact path="/confirmOrder" element={<ConfirmOrder />}></Route>
     </Routes>
   </BrowserRouter>);
 }
