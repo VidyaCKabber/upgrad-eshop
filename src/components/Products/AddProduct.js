@@ -56,7 +56,7 @@ const AddProduct=()=> {
             'Content-Type': 'application/json',
             'x-auth-token': loginToken
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(userData)
           })
           .then(response => response.json())
           .then(data =>{
@@ -162,7 +162,7 @@ const AddProduct=()=> {
                         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                         open={isAlertOpen}
                         onClose={handleCloseAlert}
-                      >
+                        >
                         <SnackbarContent
                           style={{ backgroundColor: '#00de00', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
                           message={

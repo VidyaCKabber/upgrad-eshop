@@ -37,8 +37,7 @@ function Products() {
   };
 
   const handleEditProduct = () => {
-    
-    // implement delete code here
+    //navigate(`/modifyProduct/${product.id}`);    
   };
   const handleCloseAlert = (event, reason) => {
     if (reason === 'clickaway') {
@@ -202,8 +201,8 @@ function Products() {
                   {userRole === "ADMIN" ?
                     <div>
                       <div style={{ marginLeft: 'auto' }}>
-                        <IconButton aria-label="edit" onClick={handleEditProduct}>
-                          <EditIcon />
+                        <IconButton aria-label="edit" component={Link} to={`/modifyProduct/${product.id}`}>
+                        <EditIcon />  
                         </IconButton>
                         <IconButton aria-label="delete" onClick={handleDeleteProduct}>
                           <DeleteIcon />
