@@ -56,7 +56,8 @@ export default function ModifyProduct(){
             .then(response => response.json())
                 .then(data => {
                     console.log(data);  
-                    setIsAlertOpen(true);
+                    //setIsAlertOpen(true);
+                    localStorage.setItem('modifiedProductName',data.name);
                     navigate("/products");
                 })
                 .catch(error => console.log(error));
@@ -213,6 +214,7 @@ export default function ModifyProduct(){
                           }
                         />
                       </Snackbar>
+                      
                     </Card>
                 </Grid>
             </div>

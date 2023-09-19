@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilter';
-import { Autocomplete, TextField, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment } from '@mui/material/';
+import { Autocomplete, TextField, Card, CardContent, CardActions, Button, IconButton, Typography, Box, Grid, InputAdornment } from '@mui/material/';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
 import { Snackbar, SnackbarContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+// For dialog box
+import Backdrop from '@mui/material/Backdrop';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Modal from '@mui/material/Modal';
+//import { useTheme } from '@mui/material/styles';
 
 
 const sortingOptions = [
@@ -29,21 +39,36 @@ function Products() {
   const [searchQuery, setSearchQuery] = useState('');
   const [userRole, setUserRole] = useState('');
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isModifyAlertOpen, setIsModiyfAlertOpen] = useState(false);  
+  const [diaologOpen, setdiaologOpen] =useState(false);
+  const [displayProd, setDisplayProd] = useState('');
+  const [deletedProduct,setDeletedProduct] = useState('');
+  //const theme = useTheme();
+  //const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  
+  const handleClose = () =>{
+    setdiaologOpen(false);
+  }
   const handleDeleteProduct = () => {
-    setIsAlertOpen(true);
-    // implement delete code here
+    setdiaologOpen(true);
   };
 
-  const handleEditProduct = () => {
-    //navigate(`/modifyProduct/${product.id}`);    
-  };
+  const showDeletedALert = () => {
+    setdiaologOpen(false);
+    setIsAlertOpen(true);
+  }
   const handleCloseAlert = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setIsAlertOpen(false);
+  };
+  const handleModifyCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setIsModiyfAlertOpen(false);
+    localStorage.removeItem('modifiedProductName');
   };
   const getAllProducts = () => {
     fetch(`http://localhost:8080/api/products`)
@@ -103,6 +128,11 @@ function Products() {
 
 
   useEffect(() => {
+    const modifiedProduct = localStorage.getItem('modifiedProductName');
+    if (modifiedProduct != null){
+      setDisplayProd(modifiedProduct);
+      setIsModiyfAlertOpen(true);
+    }
     getAllProducts();
   }, []);
 
@@ -157,6 +187,7 @@ function Products() {
     }
   };
 
+
   return (
     <div>
       <div className="available-catagories">
@@ -204,25 +235,64 @@ function Products() {
                         <IconButton aria-label="edit" component={Link} to={`/modifyProduct/${product.id}`}>
                         <EditIcon />  
                         </IconButton>
-                        <IconButton aria-label="delete" onClick={handleDeleteProduct}>
+                        <IconButton aria-label="delete" onClick={handleDeleteProduct} >
                           <DeleteIcon />
                         </IconButton>
-                      </div>
-                      <Snackbar
+                      </div>                      
+                    </div>
+                    :
+                    null
+                  }
+
+                </CardActions>
+             
+                <Dialog
+                        open={diaologOpen}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        slots={{ backdrop: Backdrop }}
+                        slotProps={{
+                          backdrop: {
+                            sx: {
+                              boxShadow: "none",
+                              backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                            },
+                          },
+                        }}
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                           {"Confirm deletion of the product!"}
+                        </DialogTitle>
+                        <DialogContent>
+                        <DialogContentText>
+                              Are you sure you want to delete the product?
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={showDeletedALert} variant="contained" style={{ backgroundColor: '#3f51b5' }}>
+                              OK
+                            </Button>
+                            <Button variant="outlined" onClick={handleClose}>
+                              CANCEL
+                            </Button>
+                            </DialogActions>
+                  </Dialog>
+                  <Snackbar
                         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                         open={isAlertOpen}
                         onClose={handleCloseAlert}
                       >
                         <SnackbarContent
-                          style={{ backgroundColor: '#FF4233', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
+                          style={{ backgroundColor: '#00de00', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
                           message={
                             <span>
-                              Item deleted
+                              Product {deletedProduct} deleted successfully
                               <IconButton
                                 size="small"
                                 aria-label="close"
                                 color="inherit"
-                                onClick={handleCloseAlert}
+                               onClick={handleCloseAlert}
                               >
                                 <CloseIcon fontSize="small" />
                               </IconButton>
@@ -230,12 +300,28 @@ function Products() {
                           }
                         />
                       </Snackbar>
-                    </div>
-                    :
-                    null
-                  }
-
-                </CardActions>
+                  <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        open={isModifyAlertOpen}
+                        onClose={handleModifyCloseAlert}
+                        >
+                        <SnackbarContent
+                          style={{ backgroundColor: '#00de00', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
+                          message={
+                            <span>
+                              Product {displayProd} modified successfully
+                              <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                               onClick={handleModifyCloseAlert}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </span>
+                          }
+                        />
+                      </Snackbar>
               </Card>
             </Grid>
           ))}
