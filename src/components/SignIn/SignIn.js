@@ -1,6 +1,5 @@
 // SignIn.js
 import React, { useState, useEffect } from 'react';
-import Navbar from '../Navbar/Navbar.js';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -9,8 +8,7 @@ import Card from '@mui/material/Card'; // Import the Card component
 import Typography from '@mui/material/Typography';
 import { Link, useNavigate } from 'react-router-dom';
 import './SignIn.css';
-import { SignalCellularNullRounded } from '@mui/icons-material';
-import { colors } from '@mui/material';
+
 
 
 const SignIn = () => {
