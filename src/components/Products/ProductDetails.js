@@ -5,7 +5,7 @@ import {
   Button,
 } from '@mui/material';
 import './ProductDetails.css';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilter';
 
 
@@ -90,7 +90,9 @@ function ProductDetails() {
                   style={{ color: 'white', backgroundColor: '#3f51b5', textDecoration: 'none' }}
                   disabled={enteredQuantity < 1 || enteredQuantity > p.availableItems}
                 >
-                  PLACE ORDER
+                  <Link to="/placeOrder">
+                  Place Order
+                  </Link>
                 </Button>
               </div>
             </div>

@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import {Button, IconButton, Select, MenuItem} from '@mui/material';
 import Grid from '@mui/material/Grid'; 
 import Card from '@mui/material/Card'; 
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Snackbar, SnackbarContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import './AddProduct.css';
+import './ModifyProduct.css'; 
 
-const AddProduct=()=> {
-    //const navigate = useNavigate();
-    const categories = ['Furniture', 'Apparel', 'Electronics', 'Footwear', 'PersonalCare'];
+export default function ModifyProduct(){
+    const navigate= useNavigate();
     const [productName, setProductName] =useState('');
     const [category, setCategory] =useState('');
     const [manufacturer, setManufacturer] =useState('');
@@ -20,6 +19,7 @@ const AddProduct=()=> {
     const [imageURL, setImageURL] =useState('');
     const [productDesc, setProductDesc] =useState('');
     const [error, setError] = useState('');
+    const { id } = useParams();
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     const handleCloseAlert = (event, reason) => {
@@ -27,62 +27,102 @@ const AddProduct=()=> {
           return;
         }
         setIsAlertOpen(false);
-      };
+      }
 
-    const handleAddProduct = async ()=>{
+    const handleModifyProduct = async () => {
         try{
+            const productID = localStorage.getItem('modifyProductId');
             const loginToken = localStorage.getItem('loginToken');
-            //const productID = localStorage.getItem('selectedProductId');
-        if (!productName || !category || !manufacturer || !availableItems || !price) {
-            setError('All inputs are required.');
-            return;
-          }
 
-          // Construct the data object for the API request
-          const userData ={
-            name: productName,
-            category: category,
-            price: price,
-            description: productDesc,
-            manufacturer: manufacturer,
-            availableItems: availableItems,
-            imageURL: imageURL,
-          };
+            const userData ={
+                name: productName,
+                category: category,
+                price: price,
+                description: productDesc,
+                manufacturer: manufacturer,
+                availableItems: availableItems,
+                imageURL: imageURL,
+              };
 
-          await fetch('http://localhost:8080/api/products',
-          {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': loginToken
-          },
-          body: JSON.stringify(userData)
-          })
-          .then(response => response.json())
-          .then(data =>{
-            console.log(data);
-            //navigate(`/productDetails/${productID}`)
-            //navigate('/products');
-            setIsAlertOpen(true);
+            await fetch (`http://localhost:8080/api/products/${productID}`,
+            {
+                method :'PUT',
+                headers :{
+                    'Content-Type': 'application/json',
+                    'x-auth-token': loginToken
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+                .then(data => {
+                    console.log(data);  
+                    //setIsAlertOpen(true);
+                    localStorage.setItem('modifiedProductName',data.name);
+                    navigate("/products");
+                })
+                .catch(error => console.log(error));
 
-          })
-          .catch(error => console.log(error));
+        } 
+        catch{
 
         }
-        catch (error) {
-            setError('An error occurred. Please try again.');
-          } 
+
     }
+    const getProductDetails = async () => {
+        try{
+            const productID = localStorage.getItem('modifyProductId');
+            const loginToken = localStorage.getItem('loginToken');
+            await fetch (`http://localhost:8080/api/products/${productID}`,
+            {
+                method :'GET',
+                headers :{
+                    'x-auth-token': loginToken
+                }
+            })
+            .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    setProductName(data.name);
+                    setCategory(data.category);
+                    setAvailableItems(data.availableItems);
+                    setManufacturer(data.manufacturer);
+                    setPrice(data.price);
+                    setImageURL(data.imageUrl);
+                    if(data.description === null){
+                        setProductDesc('');
+                    }
+                    else {
+                        setProductDesc(data.description);
+                    }
+                    if(data.imageUrl === null){
+                        setImageURL('');
+                    }
+                    else {
+                        setImageURL(data.imageUrl);
+                    }
+                    
+                })
+                .catch(error => console.log(error));
+        }
+        catch{
 
-
+        } 
+    }
+    
+    useEffect(() =>{
+        localStorage.setItem('modifyProductId', id);
+        console.log("Modify : "+localStorage.getItem('modifyProductId'));
+        getProductDetails();
+    },[id])
+ 
     return(
-        <div className='addProduct-container'>
+        <div className='modifyProduct-container'>
             <div className='centered-container'>
-                <Typography variant="h6" gutterBottom marginTop={'20px'}>
-                    Add Product
+               <Typography variant="h6" gutterBottom marginTop={'20px'}>
+                    Modify Product
                 </Typography>
             </div>
-            <div className='addProduct-fields-container' style={{width: '400px'}}>
+            <div className='modifyProduct-fields-container' style={{width: '400px'}}>
                 <Grid>
                     <Card>
                         <TextField
@@ -93,20 +133,14 @@ const AddProduct=()=> {
                         fullWidth
                         margin="normal"
                         />
-                        <label>
-                        <Select labelId="category-select-label" defaultValue="" style={{ width: '400px' }}
-                        onChange={(e) => {
-                            console.log("Current Selected Value : ", e.target.value)
-                            setCategory(e.target.value)
-                        }}
-                        >
-                        {categories.map((option, index) => (
-                        <MenuItem key={index} value={option}>
-                            {option}
-                        </MenuItem>
-                         ))}
-                        </Select>
-                        </label>
+                        <TextField
+                        label="Category"
+                        variant="outlined"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                        />
                         <TextField
                         label="Manufacturer *"
                         variant="outlined"
@@ -151,12 +185,12 @@ const AddProduct=()=> {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={handleAddProduct}
+                            onClick={handleModifyProduct}
                             fullWidth
                             sx={{ mt: 2 }}
                             style={{ backgroundColor: '#3f51b5' }}
                         >
-                            SAVE PRODUCT
+                            MODIFY PRODUCT
                         </Button>
                         <Snackbar
                         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -167,7 +201,7 @@ const AddProduct=()=> {
                           style={{ backgroundColor: '#00de00', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
                           message={
                             <span>
-                              Product {productName} added successfully
+                              Product {productName} modified successfully
                               <IconButton
                                 size="small"
                                 aria-label="close"
@@ -180,13 +214,11 @@ const AddProduct=()=> {
                           }
                         />
                       </Snackbar>
+                      
                     </Card>
                 </Grid>
             </div>
 
         </div>
     );
-
 }
-
-export default AddProduct;
