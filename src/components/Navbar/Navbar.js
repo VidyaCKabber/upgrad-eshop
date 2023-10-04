@@ -43,6 +43,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     navigate('/logout')
   }
+
   return (
     <AppBar position="static">
       <Toolbar className="navbar-container">
@@ -85,7 +86,7 @@ const Navbar = () => {
         <div className="right-section">
           {(location.pathname !== '/signin' && location.pathname !== '/signup') ? (
             <div>
-              <Link to="/home" className="nav-link">
+              <Link to="/products" className="nav-link">
                 Home
               </Link>
               <Link to="/addproduct" className="nav-link" style={{ marginRight: '20px' }}>

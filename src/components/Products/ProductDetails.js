@@ -16,6 +16,15 @@ function ProductDetails() {
   const [enteredQuantity, setEnteredQuantity] = useState(1); // Initialize with 1
 
   useEffect(() => {
+    const loginToken = localStorage.getItem('loginToken').trim();
+    console.log('loginToken:', loginToken);
+    if(loginToken === '' || loginToken === "null" || loginToken === "undefined"){
+      alert("Please login to buy the Product");
+      navigate('/signin');
+    }
+  });
+
+  useEffect(() => {
     localStorage.setItem('selectedProductId', id);
     // Fetch the product details based on the product ID
     fetch(`http://localhost:8080/api/products/${id}`)
