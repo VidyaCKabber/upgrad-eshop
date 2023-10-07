@@ -4,16 +4,17 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
+import {IconButton} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 //import { Stepper, Step, StepLabel } from "@material-ui/core";
-import Paper from '@mui/material/Paper';
+import { Snackbar, SnackbarContent } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Box, MenuItem, Select, FormControl, InputLabel, FormHelperText, Grid, Card } from "@mui/material";
-import { TroubleshootOutlined } from "@mui/icons-material";
 import './PlaceOrder.css'
 
 const steps = ['Items', 'Select Address', 'Confirm Order'];
 
-const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+//const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
 
 
 function PlaceOrder(){
@@ -29,24 +30,35 @@ function PlaceOrder(){
     const [error, setError] = useState(null);
     const [addressArray,setaddressArray] = useState([]);
     const [address, setAddress] = useState('');
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setIsAlertOpen(false);
+      }
 
 
-    // dummy code to test
-
-    //const [selectedOption, setSelectedOption] = useState('');
+    const handleStepBack =() =>{
+        const productID =localStorage.getItem('selectedProductId');
+        navigate(`/productDetails/${productID}`);
+    }
 
     const handleChange = (event) => {
-        console.log(event.target.value);
-        setAddress(event.target.value);
+        console.log("Event "+event.target.value);
+        const add = event.target.value;
+        //console.log("Address "+ add);
+        setAddress(add);
         let savedAddress = localStorage.getItem('selectedAddress');
-        console.log("Address : "+ address);
+        console.log("Address : "+ add);
         console.log("Saved Address : "+ savedAddress);
         if(savedAddress == null){
-            localStorage.setItem("selectedAddress",address);
+            localStorage.setItem("selectedAddress",add);
         }
         if(savedAddress!=null){
             localStorage.removeItem("selectedAddress");
-            localStorage.setItem("selectedAddress",address);
+            localStorage.setItem("selectedAddress",add);
         }
       };
     
@@ -64,7 +76,7 @@ function PlaceOrder(){
             
         }
         else{
-            alert('Select the address');
+            setIsAlertOpen(true);
         }
     };
     // Don't need back navigation, commenting below function
@@ -274,8 +286,8 @@ function PlaceOrder(){
                         
                             <Button sx={{marginTop : 5}}
                                 color="primary"
-                                disabled={false /*activeStepCount === 1 || activeStepCount ===2 */}
-                                // onClick={handleStepBack}
+                                //disabled={false /*activeStepCount === 1 || activeStepCount ===2 */}
+                                onClick={handleStepBack}
                                 
                             >Back
                             </Button>
@@ -285,6 +297,28 @@ function PlaceOrder(){
                             onClick={handleStepNext}>
                                NEXT
                             </Button>
+                            <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        open={isAlertOpen}
+                        onClose={handleCloseAlert}
+                        >
+                        <SnackbarContent
+                          style={{ backgroundColor: '#FF5733 ', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
+                          message={
+                            <span>
+                             Please select Address
+                              <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={handleCloseAlert}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </span>
+                          }
+                        />
+                      </Snackbar>
                     </div>
                     </div>
                     </center>

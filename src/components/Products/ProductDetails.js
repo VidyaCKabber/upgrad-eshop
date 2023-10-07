@@ -17,6 +17,7 @@ function ProductDetails() {
 
   useEffect(() => {
     localStorage.setItem('selectedProductId', id);
+    localStorage.setItem('quantity',enteredQuantity);
     // Fetch the product details based on the product ID
     fetch(`http://localhost:8080/api/products/${id}`)
       .then(response => response.json())
@@ -40,6 +41,7 @@ function ProductDetails() {
   const handleQuantityChange = (event) => {
     const newQuantity = event.target.value;
     setEnteredQuantity(newQuantity);
+    localStorage.setItem('quantity',newQuantity);
   }
 
   return (
