@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilter';
-import { Autocomplete, TextField, Card, CardContent, CardActions, Button, IconButton, Typography, Box, Grid, InputAdornment } from '@mui/material/';
+import { Autocomplete, TextField, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment, alertClasses } from '@mui/material/';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Search as SearchIcon } from '@mui/icons-material';
@@ -111,22 +111,6 @@ function Products() {
     getAllCatagories();
   }, []);
 
-  // const handleCategoryChange = (event, newCategory) => {
-  //   fetch(`http://localhost:8080/api/products`)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log(data);
-  //       if (newCategory === "ALL") {
-  //         getAllProducts();
-  //       } else {
-  //         const filteredProducts = data.filter(item => item.category.toLowerCase() === newCategory.toLowerCase());
-  //         setProducts(filteredProducts);
-  //       }
-  //     })
-  //     .catch(error => console.error('Error fetching products:', error));
-  // };
-
-
   useEffect(() => {
     const modifiedProduct = localStorage.getItem('modifiedProductName');
     if (modifiedProduct != null){
@@ -187,6 +171,17 @@ function Products() {
     }
   };
 
+  const handleBuyProduct = (productId) =>{
+    
+    const loginToken = localStorage.getItem('loginToken').trim();
+    console.log('loginToken:', loginToken);
+    if(loginToken === '' || loginToken === "null" || loginToken === "undefined"){
+      alert("Please login to buy the Product");
+      navigate('/signin')
+    } else {
+      navigate(`/productDetails/${productId}`);
+    }
+  }
 
   return (
     <div>
@@ -226,8 +221,12 @@ function Products() {
                   <Typography>{product.description}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Button variant="contained" style={{ backgroundColor: '#3f51b5' }}>
-                    <Link to={`/productDetails/${product.id}`} style={{ color: 'white', textDecoration: 'none'}}>BUY</Link>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: '#3f51b5' }}
+                    onClick={() => handleBuyProduct(product.id)}
+                  >
+                    Buy
                   </Button>
                   {userRole === "ADMIN" ?
                     <div>
