@@ -4,7 +4,7 @@ import CategoryFilter from '../../common/components/CategoryFilter/CategoryFilte
 import { Autocomplete, TextField, Card, CardContent, CardActions, Button, IconButton, Typography, Grid, InputAdornment, alertClasses } from '@mui/material/';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Search as SearchIcon } from '@mui/icons-material';
+import { LocalActivity, Search as SearchIcon } from '@mui/icons-material';
 import './Products.css';
 import { Snackbar, SnackbarContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,6 +40,7 @@ function Products() {
   const [userRole, setUserRole] = useState('');
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isModifyAlertOpen, setIsModiyfAlertOpen] = useState(false);  
+  const [isOrderAlertOpen, setIsOrderAlertOpen] =useState(false);
   const [diaologOpen, setdiaologOpen] =useState(false);
   const [displayProd, setDisplayProd] = useState('');
   const [deletedProduct,setDeletedProduct] = useState('');
@@ -69,6 +70,13 @@ function Products() {
     }
     setIsModiyfAlertOpen(false);
     localStorage.removeItem('modifiedProductName');
+  };
+  const handleOrderCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setIsOrderAlertOpen(false);
+    localStorage.removeItem('OrderPlaced');
   };
   const getAllProducts = () => {
     fetch(`http://localhost:8080/api/products`)
@@ -116,6 +124,11 @@ function Products() {
     if (modifiedProduct != null){
       setDisplayProd(modifiedProduct);
       setIsModiyfAlertOpen(true);
+    }
+    const orderPlaced = localStorage.getItem('OrderPlaced')
+    if (orderPlaced != null){
+      //setDisplayProd(modifiedProduct);
+      setIsOrderAlertOpen(true);
     }
     getAllProducts();
   }, []);
@@ -314,6 +327,28 @@ function Products() {
                                 aria-label="close"
                                 color="inherit"
                                onClick={handleModifyCloseAlert}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </span>
+                          }
+                        />
+                      </Snackbar>
+                      <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        open={isOrderAlertOpen}
+                        onClose={handleOrderCloseAlert}
+                        >
+                        <SnackbarContent
+                          style={{ backgroundColor: '#00de00', color: 'white', display: 'flex', justifyContent: 'space-between' }} // Customize background color
+                          message={
+                            <span>
+                              Order placed successfully
+                              <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                               onClick={handleOrderCloseAlert}
                               >
                                 <CloseIcon fontSize="small" />
                               </IconButton>

@@ -21,13 +21,20 @@ function ConfirmOrder(){
     const [category, setCategory] = useState('');
     const [desc, setDesc] =useState('');
     const [unitPrice, setUnitPrice] = useState('');
+    const [name, setName] = useState('');
+    const [contactNumber, setContactNumber] = useState('');
+    const [street, setStreet] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [zipCode, setZipCode] = useState('');
 
     const handleStepBack =() =>{
         //const oductID =localStorage.getItem('selectedProductId');
         navigate("/placeOrder");
     }
     const handleStepNext = () => {
-        
+        localStorage.setItem('OrderPlaced', 'Y');
+        navigate("/products");
        
     }
 
@@ -40,6 +47,27 @@ function ConfirmOrder(){
         setAddress(selectedAddress);
         setProduct(selectedProduct);
         setQuantity(quantity);
+        const loginToken = localStorage.getItem('loginToken');
+            fetch(`http://localhost:8080/api/addresses/${selectedAddress}`,
+            {
+                method: 'GET',
+                headers: {
+                'x-auth-token': loginToken
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    setName(data.name);
+                    setContactNumber(data.contactNumber);
+                    setCity(data.city);
+                    setStreet(data.street);
+                    setState(data.state);
+                    setZipCode(data.zipCode);
+                    //setProductDetails(previousData => [...previousData, data]);
+                })
+                .catch(error => console.error('Error fetching product details:', error));
+
             fetch(`http://localhost:8080/api/products/${selectedProduct}`)
                 .then(response => response.json())
                 .then(data => {
@@ -83,15 +111,20 @@ function ConfirmOrder(){
                                     <Typography variant='subtitle1' align='left'> Quantity : {quantity} </Typography><br></br>
                                     <Typography variant='subtitle2' align='left'> Categrory : {category} </Typography><br></br>
                                     <Typography variant='subtitle2' align='left'> {desc} </Typography><br></br>
-                                    <Typography variant='h6' align='left' color={'red'}>Total Price :{unitPrice*quantity} </Typography>
+                                    <Typography variant='h6' align='left' color={'red'}>Total Price : {unitPrice*quantity} </Typography>
                                 </CardContent>
                             </Card>
                         </Grid>
                         <Grid item xs={4}>
                             <Card  style={{height :'350px'}}>
                                 <CardContent>
-                                    <Typography variant='h5' align='left'>Address Details :</Typography>
-                                    <Typography variant='subtitle1' align='left'> {address} </Typography><br></br>
+                                    <Typography variant='h5' align='left'>Address Details :</Typography><br></br>
+                                    <Typography variant='subtitle1' align='left'> {name} </Typography>
+                                    <Typography variant='subtitle1' align='left'> Contact Number : {contactNumber} </Typography>
+                                    <Typography variant='subtitle1' align='left'> {street},{city} </Typography>
+                                    <Typography variant='subtitle1' align='left'> {state} </Typography>
+                                    <Typography variant='subtitle1' align='left'> {zipCode} </Typography>
+
                                 </CardContent>   
                             </Card>
                         </Grid>
@@ -99,13 +132,13 @@ function ConfirmOrder(){
                       
                     <div >
                         
-                        <Button sx={{marginTop : 5}}
+                        <Button sx={{marginTop : 2}}
                             color="primary"
                             //disabled={false /*activeStepCount === 1 || activeStepCount ===2 */}
                             onClick={handleStepBack}>
                             Back
                         </Button>
-                        <Button sx={{marginTop : 5, marginLeft :2}}
+                        <Button sx={{marginTop : 2, marginLeft :2}}
                             variant="contained"
                             color="primary"
                             onClick={handleStepNext}>

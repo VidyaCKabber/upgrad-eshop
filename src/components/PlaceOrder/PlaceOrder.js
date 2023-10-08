@@ -4,13 +4,14 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
-import {IconButton} from '@mui/material';
+import {IconButton, Typography} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 //import { Stepper, Step, StepLabel } from "@material-ui/core";
 import { Snackbar, SnackbarContent } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Box, MenuItem, Select, FormControl, InputLabel, FormHelperText, Grid, Card } from "@mui/material";
 import './PlaceOrder.css'
+import { AlignHorizontalLeft } from "@mui/icons-material";
 
 const steps = ['Items', 'Select Address', 'Confirm Order'];
 
@@ -145,7 +146,7 @@ function PlaceOrder(){
                 .then(data => {
                     //console.log(data);
                     console.log("Address ID : " + data.id);
-                    setaddressArray([data]);
+                    setaddressArray([...addressArray,data]);
                     console.log(addressArray);
                     console.log(addressArray.length);
                 })
@@ -179,25 +180,23 @@ function PlaceOrder(){
                 ) : (
                     <center>
                     <div >
-
+                    <br/>
                     <Grid container justifyContent="center">
-                    <Grid item xs={12} sm={6}>
-                        <form onSubmit={handleSubmit}>
+                        <Grid item xs={12} sm={6}>
+                            <form onSubmit={handleSubmit}>
                             <FormControl fullWidth variant="outlined">
-                            <InputLabel id="select-label">Select an option</InputLabel>
+                            <Typography align="left">Select Address</Typography>
                             <Select
                                 labelId="select-label"
                                 id="select"
                                 value={address}
                                 onChange={handleChange}
-                                label="Select address"
+                                label="Select address"  
+                                placeholder="Select.."                           
                             >
-                                <MenuItem value="">
-                                <em>None</em>
-                                </MenuItem>
                                 {addressArray.map((option, index) => (
                                 <MenuItem key={index} value={option.id}>
-                                    {option.city}
+                                    {option.name}-->{option.street},{option.city}
                                 </MenuItem>
                                 ))}
                             </Select>
@@ -270,6 +269,7 @@ function PlaceOrder(){
                                     fullWidth
                                     margin="normal"
                                 />
+                                {error && <div className="error-message">{error}</div>}
                                 </Card>
                                 <Button
                                     variant="contained"
